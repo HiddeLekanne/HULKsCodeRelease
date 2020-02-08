@@ -51,6 +51,8 @@ SimRobotInterface::SimRobotInterface(SimRobot::Application& application, SimRobo
   , jointAngleCommands_(keys::joints::JOINTS_MAX, 0)
   , topCamera_(Camera::TOP)
   , bottomCamera_(Camera::BOTTOM)
+  , topSegmentation_(Camera::TOP)
+  , bottomSegmentation_(Camera::BOTTOM)
   , buttons_()
   , robotName_(robot_->getFullName().mid(robot_->getFullName().lastIndexOf('.') + 1).toStdString())
 {
@@ -89,6 +91,27 @@ SimRobotInterface::SimRobotInterface(SimRobot::Application& application, SimRobo
   // accelerometer
   parts[0] = "Accelerometer.acceleration";
   accelerometer_ = application_.resolveObject(parts, robot_, SimRobotCore2::sensorPort);
+
+  // Segmations
+  parts[0] = "ObjectSegmentedImageSensorTop.image";
+  segmentations_[0] = application_.resolveObject(parts, robot_, SimRobotCore2::sensorPort);
+  {
+    const QList<int>& dimensions =
+        reinterpret_cast<SimRobotCore2::SensorPort*>(segmentations_[0])->getDimensions();
+    assert(dimensions.size() == 3);
+    assert(dimensions[2] == 3);
+    topSegmentation_.setSize(dimensions[0], dimensions[1]);
+  }
+
+  parts[0] = "ObjectSegmentedImageSensorBottom.image";
+  segmentations_[1] = application_.resolveObject(parts, robot_, SimRobotCore2::sensorPort);
+  {
+    const QList<int>& dimensions =
+        reinterpret_cast<SimRobotCore2::SensorPort*>(segmentations_[1])->getDimensions();
+    assert(dimensions.size() == 3);
+    assert(dimensions[2] == 3);
+    bottomSegmentation_.setSize(dimensions[0], dimensions[1]);
+  }
 
   // cameras
   parts[0] = "CameraTop.image";
@@ -159,9 +182,11 @@ void SimRobotInterface::update()
   {
     if (topCamera_.getRequiresRenderedImage() || bottomCamera_.getRequiresRenderedImage())
     {
+
+
+      // SimRobotCamera::renderCameras({&topSegmentation_, &bottomSegmentation_}, segmentations_, false);      
       std::unique_lock<std::mutex> ul(cameraDataLock_);
-      if (SimRobotCamera::renderCameras({&topCamera_, &bottomCamera_}, cameras_))
-      {
+      if (SimRobotCamera::renderCameras({&topCamera_, &bottomCamera_}, cameras_, true)) {
         ul.unlock();
         imagesRendered_.notify_one();
       }
@@ -173,8 +198,26 @@ void SimRobotInterface::update()
         // if no real image is requested, set an empty one to trigger the waiting thread
         topCamera_.setImage(nullptr, TimePoint::getCurrentTime());
         bottomCamera_.setImage(nullptr, TimePoint::getCurrentTime() + std::chrono::milliseconds(1));
+        imagesRendered_.notify_one();
+
       }
-      imagesRendered_.notify_one();
+    }
+    if (topSegmentation_.getRequiresRenderedImage() || bottomSegmentation_.getRequiresRenderedImage())
+    {
+
+      std::unique_lock<std::mutex> ul(cameraDataLock_);
+      if (SimRobotCamera::renderCameras({&topSegmentation_, &bottomSegmentation_}, segmentations_, false)) {
+        ul.unlock();
+      }
+    }
+    else
+    {
+      {
+        std::unique_lock<std::mutex> ul(cameraDataLock_);
+        // if no real image is requested, set an empty one to trigger the waiting thread
+        topSegmentation_.setImage(nullptr, TimePoint::getCurrentTime());
+        bottomSegmentation_.setImage(nullptr, TimePoint::getCurrentTime() + std::chrono::milliseconds(1));
+      }
     }
   }
 
@@ -387,8 +430,8 @@ CameraInterface& SimRobotInterface::getNextCamera()
 {
   std::unique_lock<std::mutex> ul(cameraDataLock_);
   std::array<SimRobotCamera*, 2> cameras = {&topCamera_, &bottomCamera_};
-
   imagesRendered_.wait(ul, [&]() { return SimRobotCamera::getNextCamera(cameras); });
+
   return *SimRobotCamera::getNextCamera(cameras);
 }
 

@@ -6,7 +6,7 @@
 SimRobotCamera::SimRobotCamera(const Camera camera)
   : cameraType_(camera)
   , imageAvailable_(false)
-  , requiresRenderedImage_(false)
+  , requiresRenderedImage_(true)
 {
 }
 
@@ -107,7 +107,9 @@ SimRobotCamera* SimRobotCamera::getNextCamera(std::array<SimRobotCamera*, 2> cam
       if (!firstCamera)
       {
         firstCamera = camera;
+        std::cout << "first camera" <<std::endl;
       }
+      std::cout << firstCamera->timestamp_.getSystemTime() << ", " << camera->timestamp_.getSystemTime() << std::endl;
 
       if (firstCamera->timestamp_ > camera->timestamp_)
       {
@@ -115,30 +117,37 @@ SimRobotCamera* SimRobotCamera::getNextCamera(std::array<SimRobotCamera*, 2> cam
       }
     }
   }
-
   return firstCamera;
 }
 
 bool SimRobotCamera::renderCameras(std::array<SimRobotCamera*, 2> cameras,
-                                   SimRobot::Object* simrobotCameras[2])
+                                   SimRobot::Object* simrobotCameras[2],
+                                   bool setImage = true)
 {
   bool imageAvailable = false;
   for (auto camera : cameras)
   {
     imageAvailable |= camera->imageAvailable_.load();
+    printf("noooooo\n");
   }
 
   if (!imageAvailable)
   {
     auto srCameras = reinterpret_cast<SimRobotCore2::SensorPort**>(simrobotCameras);
     // only render images if requested by the camera interface
-    reinterpret_cast<SimRobotCore2::SensorPort*>(simrobotCameras[0])
-        ->renderCameraImages(srCameras, 2);
+    reinterpret_cast<SimRobotCore2::SensorPort*>(simrobotCameras[0])->renderCameraImages(srCameras, 2);
     // TopCamera
-    cameras[0]->setImage(srCameras[0]->getValue().byteArray, TimePoint::getCurrentTime());
-    // Bottom Camera
-    cameras[1]->setImage(srCameras[1]->getValue().byteArray,
-                         TimePoint::getCurrentTime() + std::chrono::milliseconds(1));
+    if (setImage) {
+      cameras[0]->setImage(srCameras[0]->getValue().byteArray, TimePoint::getCurrentTime());
+      // Bottom Camera
+      cameras[1]->setImage(srCameras[1]->getValue().byteArray, TimePoint::getCurrentTime() + std::chrono::milliseconds(1));
+    }
+    printf("WE shouldn't be here all the time\n");
+    // TopSegmentation
+    // cameras[2]->setImage(srCameras[2]->getValue().byteArray, TimePoint::getCurrentTime());
+    // BottomSegmentation
+    // cameras[3]->setImage(srCameras[3]->getValue().byteArray,
+                         // TimePoint::getCurrentTime() + std::chrono::milliseconds(1));
 
     return true;
   }

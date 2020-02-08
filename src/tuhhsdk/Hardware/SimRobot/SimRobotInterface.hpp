@@ -105,6 +105,8 @@ private:
   SimRobot::Object* accelerometer_ = nullptr;
   /// objects from which images can be obtained
   SimRobot::Object* cameras_[2];
+
+  SimRobot::Object* segmentations_[2];
   /// objects from which a ball can be obtained
   SimRobot::Object* ball_ = nullptr;
   /// a vector of objects representing all robots in the scene but this one
@@ -117,6 +119,10 @@ private:
   SimRobotCamera topCamera_;
   /// a camera providing the bottom image
   SimRobotCamera bottomCamera_;
+
+  SimRobotCamera topSegmentation_;
+
+  SimRobotCamera bottomSegmentation_;
   /// the fake data provided by simrobot
   SimRobotFakeData fakeData_;
   /// a dummy audio interface

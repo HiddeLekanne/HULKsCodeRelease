@@ -14,6 +14,8 @@
 #include "Tools/OpenGLTools.h"
 #include "CoreModule.h"
 
+//#include <iostream>
+
 Camera::Camera()
 {
   sensor.camera = this;
@@ -21,6 +23,9 @@ Camera::Camera()
   sensor.imageBuffer = 0;
   sensor.newimageBuffer = 0;
   sensor.imageBufferSize = 0;
+  sensor.iterators_[0] = 0;
+  sensor.iterators_[1] = 0;
+
 }
 
 Camera::~Camera()
@@ -125,6 +130,7 @@ void Camera::CameraSensor::updateValue()
   {
     renderer.finishImageRendering(imageBuffer, imageWidth, imageHeight);
   }
+
   data.byteArray = imageBuffer;
 }
 
@@ -202,7 +208,6 @@ bool Camera::CameraSensor::renderCameraImages(SimRobotCore2::SensorPort** camera
       Simulation::simulation->scene->drawAppearances(SurfaceColor::ownColor, false);
 
       sensor->data.byteArray = currentBufferPos;
-      sensor->lastSimulationStep = Simulation::simulation->simulationStep;
 
       currentHorizontalPos += imageHeight;
       currentBufferPos += imageSize;
@@ -223,6 +228,32 @@ bool Camera::CameraSensor::renderCameraImages(SimRobotCore2::SensorPort** camera
   {
     renderer.finishImageRendering(imageBuffer, imageWidth, currentHorizontalPos);
   }
+
+//  std::cout << "Synthetic Image: " << imageWidth << ",  " <<  imageHeight << std::endl;
+  for (unsigned int i = 0; i < count; ++i)
+  {
+    CameraSensor* sensor = static_cast<CameraSensor*>(cameras[i]);
+
+    if (sensor && sensor->lastSimulationStep != Simulation::simulation->simulationStep &&
+        sensor->camera->imageWidth == imageWidth && sensor->camera->imageHeight == imageHeight)
+    {
+      ++iterators_[i];
+      if (!(iterators_[i] % 20))
+      {
+        QImage outputImage(sensor->data.byteArray, sensor->camera->imageWidth,
+                           sensor->camera->imageHeight, QImage::Format_RGB888);
+
+        QTransform myTransform;
+        myTransform.rotate(180);
+        QString output_file =
+            "Data/" + QString::number(iterators_[i] / 20) + sensor->fullName + ".Synthetic.png";
+        outputImage = outputImage.transformed(myTransform);
+        outputImage.save(output_file);
+      }
+      sensor->lastSimulationStep = Simulation::simulation->simulationStep;
+    }
+  }
+
   return true;
 }
 

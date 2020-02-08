@@ -22,6 +22,8 @@ ObjectSegmentedImageSensor::ObjectSegmentedImageSensor()
   sensor.sensorType = SimRobotCore2::SensorPort::cameraSensor;
   sensor.imageBuffer = 0;
   sensor.imageBufferSize = 0;
+  sensor.iterators_[0] = 0;
+  sensor.iterators_[1] = 0;
 }
 
 ObjectSegmentedImageSensor::~ObjectSegmentedImageSensor()
@@ -194,15 +196,44 @@ bool ObjectSegmentedImageSensor::ObjectSegmentedImageSensorPort::renderCameraIma
         (*iter)->drawAppearances(SurfaceColor((j % (SurfaceColor::numOfSurfaceColors - 1)) + 1), false);
 
       sensor->data.byteArray = currentBufferPos;
-      sensor->lastSimulationStep = Simulation::simulation->simulationStep;
 
       currentHorizontalPos += imageHeight;
       currentBufferPos += imageSize;
     }
   }
-
   // read frame buffer
   renderer.finishImageRendering(imageBuffer, imageWidth, currentHorizontalPos);
+
+//  std::cout << "Segmented Image: " << imageWidth << ",  " <<  imageHeight << std::endl;
+  for (unsigned int i = 0; i < count; ++i)
+  {
+    ObjectSegmentedImageSensorPort* sensor =
+        static_cast<ObjectSegmentedImageSensorPort*>(cameras[i]);
+
+//    std::cout << sensor->lastSimulationStep << ",  " << Simulation::simulation->simulationStep << std::endl;
+//    std::cout << "Sensor: " << sensor->camera->imageWidth << ",  " <<  sensor->camera->imageHeight << std::endl;
+    if (sensor && sensor->lastSimulationStep != Simulation::simulation->simulationStep &&
+        sensor->camera->imageWidth == imageWidth && sensor->camera->imageHeight == imageHeight)
+    {
+//      printf("In loop\n");
+      ++iterators_[i];
+      if (!(iterators_[i] % 20))
+      {
+        QImage outputImage(sensor->data.byteArray, sensor->camera->imageWidth,
+                           sensor->camera->imageHeight, QImage::Format_RGB888);
+
+//        std::cout << sensor->camera->imageWidth << ",  " << sensor->camera->imageHeight
+//                  << std::endl;
+        QTransform myTransform;
+        myTransform.rotate(180);
+        QString output_file =
+            "Data/" + QString::number(iterators_[i] / 20) + sensor->fullName + ".Segmentation.png";
+        outputImage = outputImage.transformed(myTransform);
+        outputImage.save(output_file);
+      }
+      sensor->lastSimulationStep = Simulation::simulation->simulationStep;
+    }
+  }
   return true;
 }
 

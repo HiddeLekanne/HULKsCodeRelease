@@ -6,7 +6,7 @@
 enum class Camera
 {
   TOP,   ///< value for top camera
-  BOTTOM ///< value for bottom camera
+  BOTTOM, ///< value for bottom camera
 };
 
 class CameraInterface

@@ -58,7 +58,8 @@ public:
    * @return whether images where rendered
    */
   static bool renderCameras(std::array<SimRobotCamera*, 2> cameras,
-                            SimRobot::Object** simrobotCameras);
+                            SimRobot::Object** simrobotCameras,
+                            bool setImage);
   /**
    * @brief getCameraType returns the type of the camera
    * @return the type of the camera

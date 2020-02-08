@@ -1,4 +1,53 @@
 {
-  "idmap.nao": [
-  ]
+	"idmap.nao": [{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao01"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao02"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao03"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao04"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao05"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao06"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao07"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao08"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao09"
+		},
+		{
+			"bodyid": "P#######A##S##A#####",
+			"headid": "P#######A##S##A#####",
+			"name": "NAMEnao010"
+		}
+	]
 }

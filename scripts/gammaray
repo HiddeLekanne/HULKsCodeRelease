@@ -36,9 +36,9 @@ def determine_nao_version(nao_number: int):
 
 def get_nao_address(nao_number: int, ethernet: bool = True):
     if ethernet:
-        return "10.1.YOUR_TEAM_NUMBER_HERE." + str(nao_number + 10)
+        return "10.1.8." + str(nao_number + 10)
     else:
-        return "10.0.YOUR_TEAM_NUMBER_HERE." + str(nao_number + 10)
+        return "10.0.8." + str(nao_number + 10)
 
 
 @exit_on_failure
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
     logging.info("Set Hostname")
     nao_cmd(nao_address,
-            "hostnamectl set-hostname YOUR_ROBOT_NAME_HERE" + str(args.nao_number))
+            "hostnamectl set-hostname Dutch" + str(args.nao_number))
 
     logging.info("Copy Files")
     nao_cp(base_dir() + "/files/bin", "nao@" + nao_address + ":.local")

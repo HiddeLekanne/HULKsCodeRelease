@@ -40,6 +40,7 @@ private:
     unsigned int imageBufferSize;
     Pose3f offset; /**< Offset of the camera relative to the body it mounted on */
     float projection[16]; /**< The perspective projection matrix */
+    unsigned int iterators_[2];
 
     /** Update the sensor value. Is called when required. */
     void updateValue() override;
