@@ -70,5 +70,4 @@ private:
   * @param flags Flags to enable or disable certain features
   */
   void drawPhysics(unsigned int flags) const override;
-
 };

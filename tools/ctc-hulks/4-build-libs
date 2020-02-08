@@ -1,10 +1,19 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 source env.sh
 source versions
 
 # Get base directory for better referencing
 base_dir=`cd $(dirname $0); pwd -P`
+=======
+# Get base directory for better referencing
+base_dir=`cd $(dirname $0); pwd -P`
+cd ${base_dir}
+
+source env.sh
+source versions
+>>>>>>> 113ad0da47c5dfb4f109fc2c8c542311018d01c4
 
 number_jobs=9
 lib_dir="${base_dir}/libs"

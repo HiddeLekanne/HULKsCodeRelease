@@ -1,9 +1,11 @@
 #!/bin/bash
 
-source versions
-
 # Get base directory for better referencing
 base_dir=`cd $(dirname $0); pwd -P`
+cd ${base_dir}
+
+source versions
+
 MACHINE_TYPE=`uname -m`
 GCC_VERSION=`${base_dir}/x-tools/i686-nao-linux-gnu/bin/i686-nao-linux-gnu-gcc -dumpversion`
 install_dir_sysroot="${base_dir}/sysroot-${GCC_VERSION}-${TOOLCHAIN_SUB_VERSION}"
