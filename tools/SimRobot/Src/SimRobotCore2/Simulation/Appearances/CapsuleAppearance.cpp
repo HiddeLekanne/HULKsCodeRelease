@@ -13,7 +13,7 @@ void CapsuleAppearance::assembleAppearances(SurfaceColor color) const
   glPushMatrix();
   glMultMatrixf(transformation);
 
-  surface->set(color);
+  surface->set(color, (Appearance*)this);
 
   GLUquadricObj* q = gluNewQuadric();
   float cylinderHeight = height - radius - radius;

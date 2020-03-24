@@ -13,7 +13,7 @@ void SphereAppearance::assembleAppearances(SurfaceColor color) const
   glPushMatrix();
   glMultMatrixf(transformation);
 
-  surface->set(color, false);
+  surface->set(color, (Appearance*)this, false);
 
   GLUquadricObj* q = gluNewQuadric();
   gluQuadricNormals(q, GLU_SMOOTH);

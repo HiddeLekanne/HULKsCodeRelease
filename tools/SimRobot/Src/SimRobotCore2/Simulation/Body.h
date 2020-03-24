@@ -73,6 +73,8 @@ public:
   // API
   void resetDynamics() override;
 
+  // API
+  const QString& getFullName() const override {return SimObject::getFullName();}
 private:
   Vector3f centerOfMass; /**< The position of the center of mass relative to the pose of the body */
   float centerOfMassTransformation[16];
@@ -114,8 +116,6 @@ private:
   friend class CollisionSensor;
 
 private:
-  // API
-  const QString& getFullName() const override {return SimObject::getFullName();}
   SimRobot::Widget* createWidget() override {return SimObject::createWidget();}
   const QIcon* getIcon() const override {return SimObject::getIcon();}
   SimRobotCore2::Renderer* createRenderer() override {return SimObject::createRenderer();}

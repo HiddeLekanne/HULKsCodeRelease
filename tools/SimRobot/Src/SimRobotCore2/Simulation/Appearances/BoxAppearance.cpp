@@ -13,7 +13,7 @@ void BoxAppearance::assembleAppearances(SurfaceColor color) const
   glPushMatrix();
   glMultMatrixf(transformation);
 
-  surface->set(color);
+  surface->set(color, (Appearance*)this);
 
   float lx = depth * 0.5f;
   float ly = width * 0.5f;

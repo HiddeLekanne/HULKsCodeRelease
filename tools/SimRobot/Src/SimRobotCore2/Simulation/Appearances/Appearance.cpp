@@ -13,6 +13,9 @@
 #include "Tools/Texture.h"
 #include "CoreModule.h"
 
+#include <fstream>
+#include <iostream>
+
 Appearance::Surface::Surface() : texture(0)
 {
   hasAmbientColor = false;
@@ -53,28 +56,30 @@ static float colorDef[numOfSurfaceColors][4] =
   { 0 ,0 ,0.5f ,1.f}, // navy,
   { 138.f / 255.f,43.f / 255.f,226.f / 255.f,1.f}, // blueviolet
   {  0 , 191/ 255.f , 1 ,1.f}, // deepskyblue,
-  { 0.5f , 0.5f , 0,1.f}, // olive,
-  { 0 ,1 ,0 ,1.f}, // lime,
+  { 0.5f , 0.5f , 0, 1.f}, // olive,
+  { 0 ,1 ,0 , 1.f}, // lime,
   { 32.f/ 255.f ,178.f / 255.f , 170.f/ 255.f ,1.f}, // lightseagreen,
   { 210.f / 255.f , 105.f/ 255.f , 30.f/ 255.f ,1.f}, // chocolate,
   { 1, 165 / 255.f,0 ,1.f}, // orange,
   { 1, 140.f / 255.f, 0 ,1.f} // darkorange,
 };
 
-void Appearance::Surface::set(SurfaceColor color, bool defaultTextureSize) const
+void Appearance::Surface::set(SurfaceColor color, Appearance* appearance, bool defaultTextureSize) const
 {
+
   if(hasAmbientColor)
   {
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, color != ownColor ? colorDef[color] : ambientColor);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, color != ownColor ? appearance->segmentColors(appearance->getFullName(), color) : ambientColor);
   }
   else
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-  glColor4fv(color != ownColor ? colorDef[color] : diffuseColor);
+  glColor4fv(color != ownColor ? appearance->segmentColors(appearance->getFullName(), color) : diffuseColor);
 
-  glMaterialfv(GL_FRONT, GL_SPECULAR, color != ownColor ? colorDef[color] : specularColor);
+//  std::cout << "ownColor is " << (color == ownColor) << std::endl;
+  glMaterialfv(GL_FRONT, GL_SPECULAR, color != ownColor ? appearance->segmentColors(appearance->getFullName(), color) : specularColor);
   glMaterialf(GL_FRONT, GL_SHININESS, shininess);
-  glMaterialfv(GL_FRONT, GL_EMISSION, color != ownColor ? colorDef[color] : emissionColor);
+  glMaterialfv(GL_FRONT, GL_EMISSION, color != ownColor ? appearance->segmentColors(appearance->getFullName(), color) : emissionColor);
 
   if(texture)
   {
@@ -163,9 +168,38 @@ void Appearance::drawAppearances(SurfaceColor color, bool drawControllerDrawings
   {
     glPushMatrix();
     glMultMatrixf(transformation);
+//    std::cout << "DRAW: " << getFullName().toUtf8().toStdString() << std::endl;
+//    color = segmentColors(getFullName());
     GraphicalObject::drawAppearances(color, drawControllerDrawings);
     glPopMatrix();
   }
   else
     GraphicalObject::drawAppearances(color, drawControllerDrawings);
+}
+
+
+float* Appearance::segmentColors(const QString key, SurfaceColor color) {
+  static int this_color = 0;
+  if (this_color == 0) {
+    std::ofstream data_stream;
+    data_stream.open("Data/color_data.csv", std::ofstream::out | std::ofstream::trunc);
+    data_stream.close();
+  }
+  static std::map<QString, std::array<float, 4>> segmentColorsMap = std::map<QString, std::array<float, 4>>();
+  int cantor_pairing = (this_color + color) * (this_color + color + 1) / 2 + color;
+  QString proper_key = QString::number(color) + "_" + getFullName();
+  std::array<float, 4> color_node = {0.f, 0.f, 0.f, 1.f};
+  auto color_lookup = segmentColorsMap.find(proper_key);
+  if (color_lookup == segmentColorsMap.end()) {
+    this_color += 1;
+    color_node = {(1.f/255.f) * float(cantor_pairing / (255 * 255)), (1.f/255.f) * float((cantor_pairing / 255) % 255), (1.f/255.f) * float(cantor_pairing % 255), 1.f};
+    std::cout << color_node[0] << ", " << color_node[1] << ", " << color_node[2] << ", " << color_node[3] << std::endl;
+    segmentColorsMap[proper_key] = color_node;
+    std::cout << proper_key.toUtf8().toStdString() << ", i = " << cantor_pairing << ", color= " << color <<  std::endl;
+    std::ofstream data_stream;
+    data_stream.open ("Data/color_data.csv", std::ios_base::app);
+    data_stream << proper_key.toUtf8().toStdString()  << "," << cantor_pairing << std::endl;
+    data_stream.close();
+  }
+  return segmentColorsMap[proper_key].data();
 }

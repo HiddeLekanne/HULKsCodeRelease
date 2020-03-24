@@ -124,7 +124,7 @@ void ComplexAppearance::assembleAppearances(SurfaceColor color) const
   size_t verticesSize = vertices->vertices.size();
   if(verticesSize > 0)
   {
-    surface->set(color, !texCoords);
+    surface->set(color, (Appearance*)this, !texCoords);
 
     const Vertex* vertexLibrary = &vertices->vertices[0];
     const Normal* vertexNormals = &normals->normals[0];

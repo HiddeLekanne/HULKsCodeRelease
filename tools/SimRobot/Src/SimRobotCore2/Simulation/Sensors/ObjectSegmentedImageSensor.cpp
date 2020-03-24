@@ -16,6 +16,8 @@
 #include "Tools/OpenGLTools.h"
 #include "CoreModule.h"
 
+#include <iostream>
+
 ObjectSegmentedImageSensor::ObjectSegmentedImageSensor()
 {
   sensor.camera = this;
@@ -189,12 +191,15 @@ bool ObjectSegmentedImageSensor::ObjectSegmentedImageSensorPort::renderCameraIma
       glLoadMatrixf(transformation);
 
       // draw all objects
-      Simulation::simulation->scene->GraphicalObject::drawAppearances(SurfaceColor(0), false);
+      Simulation::simulation->scene->GraphicalObject::drawAppearances(SurfaceColor(1), false);
       int j = 0;
       for(std::list<Body*>::const_iterator iter = Simulation::simulation->scene->bodies.begin(),
           end = Simulation::simulation->scene->bodies.end(); iter != end; ++iter, ++j)
-        (*iter)->drawAppearances(SurfaceColor((j % (SurfaceColor::numOfSurfaceColors - 1)) + 1), false);
-
+      {
+//        std::cout << (*iter)->getFullName().toUtf8().constData() << std::endl;
+        (*iter)->drawAppearances(SurfaceColor((j % (SurfaceColor::numOfSurfaceColors - 1)) + 1),
+                                 false);
+      }
       sensor->data.byteArray = currentBufferPos;
 
       currentHorizontalPos += imageHeight;
@@ -227,7 +232,7 @@ bool ObjectSegmentedImageSensor::ObjectSegmentedImageSensorPort::renderCameraIma
         QTransform myTransform;
         myTransform.rotate(180);
         QString output_file =
-            "Data/" + QString::number(iterators_[i] / 20) + sensor->fullName + ".Segmentation.png";
+            "Data/" + QString::number(Simulation::simulation->simulationStep) + "_" + sensor->fullName + ".Segmentation.png";
         outputImage = outputImage.transformed(myTransform);
         outputImage.save(output_file);
       }

@@ -60,7 +60,7 @@ public:
     * Selects this material surface in the currently selected OpenGL context.
     * @param defaultTextureSize Initialize a default texture size if the surface has a texture.
     */
-    void set(SurfaceColor color = ownColor, bool defaultTextureSize = true) const;
+    void set(SurfaceColor color = ownColor, Appearance* appearance = nullptr, bool defaultTextureSize = true) const;
 
     /**
     * Unbinds a texture that might be bound on a \c set call before. Call function this every time
@@ -111,4 +111,5 @@ private:
   SimRobotCore2::Renderer* createRenderer() override {return SimObject::createRenderer();}
   bool registerDrawing(SimRobotCore2::Controller3DDrawing& drawing) override {return ::GraphicalObject::registerDrawing(drawing);}
   bool unregisterDrawing(SimRobotCore2::Controller3DDrawing& drawing) override {return ::GraphicalObject::unregisterDrawing(drawing);}
+  float* segmentColors(const QString key, SurfaceColor color);
 };

@@ -246,7 +246,7 @@ bool Camera::CameraSensor::renderCameraImages(SimRobotCore2::SensorPort** camera
         QTransform myTransform;
         myTransform.rotate(180);
         QString output_file =
-            "Data/" + QString::number(iterators_[i] / 20) + sensor->fullName + ".Synthetic.png";
+            "Data/" + QString::number(Simulation::simulation->simulationStep) + "_" + sensor->fullName + ".Synthetic.png";
         outputImage = outputImage.transformed(myTransform);
         outputImage.save(output_file);
       }

@@ -13,7 +13,7 @@ void CylinderAppearance::assembleAppearances(SurfaceColor color) const
   glPushMatrix();
   glMultMatrixf(transformation);
 
-  surface->set(color);
+  surface->set(color, (Appearance*)this);
 
   GLUquadricObj* q = gluNewQuadric();
   glTranslatef(0.f, 0.f, height * -0.5f);
