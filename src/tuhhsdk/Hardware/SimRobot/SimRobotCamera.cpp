@@ -107,10 +107,7 @@ SimRobotCamera* SimRobotCamera::getNextCamera(std::array<SimRobotCamera*, 2> cam
       if (!firstCamera)
       {
         firstCamera = camera;
-        std::cout << "first camera" <<std::endl;
       }
-      std::cout << firstCamera->timestamp_.getSystemTime() << ", " << camera->timestamp_.getSystemTime() << std::endl;
-
       if (firstCamera->timestamp_ > camera->timestamp_)
       {
         firstCamera = camera;
@@ -128,7 +125,6 @@ bool SimRobotCamera::renderCameras(std::array<SimRobotCamera*, 2> cameras,
   for (auto camera : cameras)
   {
     imageAvailable |= camera->imageAvailable_.load();
-    printf("noooooo\n");
   }
 
   if (!imageAvailable)
@@ -142,7 +138,7 @@ bool SimRobotCamera::renderCameras(std::array<SimRobotCamera*, 2> cameras,
       // Bottom Camera
       cameras[1]->setImage(srCameras[1]->getValue().byteArray, TimePoint::getCurrentTime() + std::chrono::milliseconds(1));
     }
-    printf("WE shouldn't be here all the time\n");
+
     // TopSegmentation
     // cameras[2]->setImage(srCameras[2]->getValue().byteArray, TimePoint::getCurrentTime());
     // BottomSegmentation
