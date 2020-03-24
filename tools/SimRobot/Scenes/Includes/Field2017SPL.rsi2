@@ -25,6 +25,8 @@
     </ComplexAppearance>
     <ComplexAppearance ref="fieldCross"/>
     <ComplexAppearance ref="fieldGreen"/>
+    <ComplexAppearance ref="extrafloor"/>
+
 
     <Compound ref="fieldGoal" name="Goal1">
       <Translation x="-4525mm"/>
@@ -108,6 +110,8 @@
   </Compound>
 
   <Surface name="fieldGreen" diffuseColor="#000000" ambientColor="#20cb20" diffuseTexture="../Textures/fieldshadow.png"/>
+  <Surface name="extrafloor" diffuseColor="rgb(100%, 80%, 0%)" ambientColor="rgb(45%, 45%, 45%)" specularColor="rgb(40%, 40%, 40%)" shininess="30"/>
+
   <Surface name="fieldNet" diffuseColor="rgb(100%, 100%, 100%)" diffuseTexture="../Textures/net.png"/>
   <Surface name="fieldWhite" diffuseColor="rgb(100%, 100%, 100%)" specularColor="rgb(80%, 80%, 80%)" shininess="10" diffuseTexture="../Textures/lineshadow.png"/>
   <Surface name="goalWhite" diffuseColor="rgb(70%, 70%, 70%)" ambientColor="rgb(45%, 45%, 45%)" specularColor="rgb(40%, 40%, 40%)" shininess="30"/>
@@ -335,6 +339,13 @@
 1 0
   </TexCoords>
 
+<Vertices name="extrafloor">
+-7.2 -5.7 -0.002
+7.2 -5.7 -0.002
+7.2 5.7 -0.002
+-7.2 5.7 -0.002
+  </Vertices>
+
   <Vertices name="fieldNet">
 -0.05 -0.8 0
 -0.05 -0.8 0.8
@@ -441,6 +452,14 @@
     <Surface ref="fieldGreen"/>
     <Vertices ref="fieldGreen"/>
     <TexCoords ref="fieldGreen"/>
+    <Quads>
+0 1 2 3
+    </Quads>
+  </ComplexAppearance>
+
+  <ComplexAppearance name="extrafloor">
+    <Surface ref="extrafloor"/>
+    <Vertices ref="extrafloor"/>
     <Quads>
 0 1 2 3
     </Quads>
