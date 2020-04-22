@@ -39,11 +39,12 @@ void Scene::createGraphics(bool isShared)
   glDepthFunc(GL_LEQUAL);
   glEnable(GL_DEPTH_TEST);
 
+  skyBox = new SkyBox();
+
   // avoid rendering the backside of surfaces
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
-
   //
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 

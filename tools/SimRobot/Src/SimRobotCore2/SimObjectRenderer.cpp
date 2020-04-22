@@ -85,6 +85,9 @@ void SimObjectRenderer::draw()
     OpenGLTools::convertTransformation(pose.invert(), invTrans);
     glMultMatrixf(invTrans);
   }
+//  else if (&simObject == Simulation::simulation->scene) {
+//      Simulation::simulation->scene->skyBox->Render(cameraTransformation, projection);
+//  }
 
   // draw origin
   if(renderFlags & showCoordinateSystem)

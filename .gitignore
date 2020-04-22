@@ -19,6 +19,8 @@ install_manifest.txt
 /build/
 /webots/filetransport*
 /webots/replay*
+/tools/SimRobot/Scenes/Data*
+tools/SimRobot/cmake-build-debug*
 
 /kdev4/*
 *.kdev4

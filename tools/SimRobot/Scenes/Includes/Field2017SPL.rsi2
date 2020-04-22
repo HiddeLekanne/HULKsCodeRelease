@@ -25,7 +25,7 @@
     </ComplexAppearance>
     <ComplexAppearance ref="fieldCross"/>
     <ComplexAppearance ref="fieldGreen"/>
-    <ComplexAppearance ref="extrafloor"/>
+  <!--<ComplexAppearance ref="extrafloor"/>--> 
 
 
     <Compound ref="fieldGoal" name="Goal1">

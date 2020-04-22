@@ -6,12 +6,13 @@
 
 #pragma once
 
-#include <unordered_map>
-#include "Simulation/PhysicalObject.h"
-#include "Simulation/GraphicalObject.h"
-#include "Simulation/Appearances/Appearance.h"
 #include "Simulation/Actuators/Actuator.h"
+#include "Simulation/Appearances/Appearance.h"
+#include "Simulation/GraphicalObject.h"
+#include "Simulation/PhysicalObject.h"
 #include "Tools/Texture.h"
+#include "Simulation/Skybox/SkyBox.h"
+#include <unordered_map>
 
 class Body;
 
@@ -69,6 +70,8 @@ public:
   std::list<Body*> bodies; /**< List of bodies without a parent body */
   std::list<Actuator::Port*> actuators; /**< List of actuators that need to do something in every simulation step */
   std::list<Light*> lights; /** List of scene lights */
+
+  SkyBox* skyBox;
 
   /** Default constructor */
   Scene() : contactMode(0), useQuickSolver(false), quickSolverIterations(-1), lastTransformationUpdateStep(0)

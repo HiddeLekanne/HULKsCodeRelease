@@ -204,6 +204,8 @@ bool Camera::CameraSensor::renderCameraImages(SimRobotCore2::SensorPort** camera
       OpenGLTools::convertTransformation(pose.invert(), transformation);
       glLoadMatrixf(transformation);
 
+      Simulation::simulation->scene->skyBox->Render(transformation, projection);
+
       // draw all objects
       Simulation::simulation->scene->drawAppearances(SurfaceColor::ownColor, false);
 

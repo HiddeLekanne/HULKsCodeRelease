@@ -168,8 +168,6 @@ void Appearance::drawAppearances(SurfaceColor color, bool drawControllerDrawings
   {
     glPushMatrix();
     glMultMatrixf(transformation);
-//    std::cout << "DRAW: " << getFullName().toUtf8().toStdString() << std::endl;
-//    color = segmentColors(getFullName());
     GraphicalObject::drawAppearances(color, drawControllerDrawings);
     glPopMatrix();
   }
@@ -193,9 +191,9 @@ float* Appearance::segmentColors(const QString key, SurfaceColor color) {
   if (color_lookup == segmentColorsMap.end()) {
     this_color += 1;
     color_node = {(1.f/255.f) * float(cantor_pairing / (255 * 255)), (1.f/255.f) * float((cantor_pairing / 255) % 255), (1.f/255.f) * float(cantor_pairing % 255), 1.f};
-    std::cout << color_node[0] << ", " << color_node[1] << ", " << color_node[2] << ", " << color_node[3] << std::endl;
+//    std::cout << color_node[0] << ", " << color_node[1] << ", " << color_node[2] << ", " << color_node[3] << std::endl;
     segmentColorsMap[proper_key] = color_node;
-    std::cout << proper_key.toUtf8().toStdString() << ", i = " << cantor_pairing << ", color= " << color <<  std::endl;
+//    std::cout << proper_key.toUtf8().toStdString() << ", i = " << cantor_pairing << ", color= " << color <<  std::endl;
     std::ofstream data_stream;
     data_stream.open ("Data/color_data.csv", std::ios_base::app);
     data_stream << proper_key.toUtf8().toStdString()  << "," << cantor_pairing << std::endl;
